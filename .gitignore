@@ -1,0 +1,34 @@
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+.env
+.env.local
+.env.*.local
+!.env.example
+
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.tmp/
+
+# The flat-file plan store. `solve --save <id>` writes here, and a plan is reproducible from its
+# instance, so committing one would only put machine-local state in the history.
+.data/
+product.config.json

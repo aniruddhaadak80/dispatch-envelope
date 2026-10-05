@@ -1,0 +1,170 @@
+/*
+ * THE SINGLE SOURCE OF COLOUR TRUTH.
+ *
+ * check:theme-tokens fails the build if a raw hex/rgb/hsl literal appears in any other file
+ * under apps/web. If you need a new colour, add it here — nowhere else. This is what stops a
+ * codebase drifting into forty slightly different greys.
+ *
+ * The palette is slate + amber on purpose. This product is about a hard limit and the distance
+ * to it, so amber carries demand and the danger of crossing the cap; slate carries the chrome and
+ * stays out of the way. Nothing here is a gradient.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* surfaces — cool slate, near-neutral */
+  --bg: #ffffff;
+  --bg-elevated: #f8fafc;
+  --bg-sunken: #f1f5f9;
+
+  /* content */
+  --fg: #0f172a;
+  --fg-muted: #475569;
+  --fg-subtle: #64748b;
+
+  /* lines */
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* accent — amber. It means demand, and only demand. */
+  --accent: #b45309;
+  --accent-hover: #92400e;
+  --accent-fg: #ffffff;
+  --accent-subtle: #fef3c7;
+
+  /* the band: committed demand, and the headroom above it */
+  --band-headroom: #e2e8f0;
+  --band-headroom-ink: #94a3b8;
+  --band-load: #d97706;
+  --band-floor: #92400e;
+  --band-broken: #b91c1c;
+  --band-broken-subtle: #fee2e2;
+
+  /* status */
+  --ok: #15803d;
+  --ok-subtle: #f0fdf4;
+  --warn: #b45309;
+  --warn-subtle: #fffbeb;
+  --danger: #b91c1c;
+  --danger-subtle: #fef2f2;
+  --info: #1d4ed8;
+  --info-subtle: #eff6ff;
+
+  /* spacing scale — compact density */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* radii — sharp. A dispatcher reads numbers, not bubbles. */
+  --radius-1: 2px;
+  --radius-2: 3px;
+  --radius-3: 4px;
+  --radius-4: 6px;
+
+  /* elevation */
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-2: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-3: 0 8px 24px rgba(15, 23, 42, 0.12);
+
+  /* type — Inter for prose, JetBrains Mono for every number */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.125rem;
+
+  /* motion */
+  --duration-fast: 90ms;
+  --duration-base: 160ms;
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #020617;
+  --bg-elevated: #0f172a;
+  --bg-sunken: #020617;
+
+  --fg: #f1f5f9;
+  --fg-muted: #94a3b8;
+  --fg-subtle: #64748b;
+
+  --border: #1e293b;
+  --border-strong: #334155;
+
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --accent-fg: #0f172a;
+  --accent-subtle: #451a03;
+
+  --band-headroom: #1e293b;
+  --band-headroom-ink: #475569;
+  --band-load: #f59e0b;
+  --band-floor: #fbbf24;
+  --band-broken: #f87171;
+  --band-broken-subtle: #450a0a;
+
+  --ok: #4ade80;
+  --ok-subtle: #052e16;
+  --warn: #fbbf24;
+  --warn-subtle: #451a03;
+  --danger: #f87171;
+  --danger-subtle: #450a0a;
+  --info: #60a5fa;
+  --info-subtle: #08203f;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-3: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+/*
+ * Dark follows the operating system unless the page explicitly asks for light.
+ *
+ * It lives here, not in globals.css, because this file is the only place a raw colour literal
+ * is permitted — check:theme-tokens fails the build otherwise. That constraint is the whole
+ * point: one file decides what every colour is.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --bg: #020617;
+    --bg-elevated: #0f172a;
+    --bg-sunken: #020617;
+    --fg: #f1f5f9;
+    --fg-muted: #94a3b8;
+    --fg-subtle: #64748b;
+    --border: #1e293b;
+    --border-strong: #334155;
+    --accent: #f59e0b;
+    --accent-hover: #fbbf24;
+    --accent-fg: #0f172a;
+    --accent-subtle: #451a03;
+    --band-headroom: #1e293b;
+    --band-headroom-ink: #475569;
+    --band-load: #f59e0b;
+    --band-floor: #fbbf24;
+    --band-broken: #f87171;
+    --band-broken-subtle: #450a0a;
+    --ok: #4ade80;
+    --ok-subtle: #052e16;
+    --warn: #fbbf24;
+    --warn-subtle: #451a03;
+    --danger: #f87171;
+    --danger-subtle: #450a0a;
+    --info: #60a5fa;
+    --info-subtle: #08203f;
+  }
+}

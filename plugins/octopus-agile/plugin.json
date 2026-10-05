@@ -1,0 +1,16 @@
+{
+  "name": "octopus-agile",
+  "version": "1.0.0",
+  "description": "Agile-style half-hourly import pricing. A representative 14-slot day in whole cents.",
+  "enabled": true,
+  "priority": 70,
+  "capabilities": ["tariff.agile"],
+  "engines": {
+    "@dispatchenvelope/core": "0.1.0"
+  },
+  "tariff": {
+    "currency": "GBP",
+    "slotMinutes": 30,
+    "pricesCents": [2240, 1980, 1610, 1270, 940, 810, 760, 890, 1120, 1460, 2130, 2680, 3120, 2840]
+  }
+}

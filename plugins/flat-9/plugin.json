@@ -1,0 +1,16 @@
+{
+  "name": "flat-9",
+  "version": "1.0.0",
+  "description": "A flat 9p per kWh tariff, for a site with no time-of-use pricing at all.",
+  "enabled": true,
+  "priority": 40,
+  "capabilities": ["tariff.flat"],
+  "engines": {
+    "@dispatchenvelope/core": "0.1.0"
+  },
+  "tariff": {
+    "currency": "GBP",
+    "slotMinutes": 60,
+    "pricesCents": [9]
+  }
+}

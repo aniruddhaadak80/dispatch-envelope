@@ -1,0 +1,40 @@
+{
+  "site": {
+    "slots": 4,
+    "slotMinutes": 60,
+    "siteLimitKw": 10,
+    "exportLimitKw": 0
+  },
+  "loads": [
+    {
+      "id": "heat-pump",
+      "name": "Heat pump",
+      "powerKw": 7,
+      "earliestSlot": 0,
+      "latestSlot": 0,
+      "minSlots": 1,
+      "maxSlots": 1,
+      "mandatory": true
+    },
+    {
+      "id": "water-tanks",
+      "name": "Water tank heat",
+      "powerKw": 6,
+      "earliestSlot": 0,
+      "latestSlot": 0,
+      "minSlots": 1,
+      "maxSlots": 1,
+      "mandatory": true
+    },
+    {
+      "id": "freezer-defrost",
+      "name": "Freezer defrost",
+      "powerKw": 2,
+      "earliestSlot": 1,
+      "latestSlot": 3,
+      "minSlots": 1,
+      "maxSlots": 1,
+      "mandatory": false
+    }
+  ]
+}

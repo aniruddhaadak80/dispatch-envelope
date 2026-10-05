@@ -1,0 +1,12 @@
+# Normalise line endings in the repository, whatever the contributor's platform.
+#
+# Without this, core.autocrlf on Windows rewrites every file on checkout and `git diff` shows
+# whole-file changes that are pure line endings — which makes review useless and makes
+# format:check disagree with what CI sees.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+*.zip binary

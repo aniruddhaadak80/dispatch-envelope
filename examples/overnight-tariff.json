@@ -1,0 +1,44 @@
+{
+  "site": {
+    "slots": 12,
+    "slotMinutes": 60,
+    "siteLimitKw": 7,
+    "exportLimitKw": 0
+  },
+  "tariff": {
+    "pricesCents": [28, 26, 24, 30, 18, 9, 8, 9, 14, 22, 31, 33],
+    "currency": "GBP"
+  },
+  "loads": [
+    {
+      "id": "ev",
+      "name": "EV charge",
+      "powerKw": 3,
+      "earliestSlot": 0,
+      "latestSlot": 10,
+      "minSlots": 4,
+      "maxSlots": 6,
+      "mandatory": true
+    },
+    {
+      "id": "immersion",
+      "name": "Immersion heater",
+      "powerKw": 3,
+      "earliestSlot": 0,
+      "latestSlot": 4,
+      "minSlots": 2,
+      "maxSlots": 2,
+      "mandatory": false
+    },
+    {
+      "id": "wash",
+      "name": "Washer dryer",
+      "powerKw": 2,
+      "earliestSlot": 0,
+      "latestSlot": 11,
+      "minSlots": 2,
+      "maxSlots": 2,
+      "mandatory": false
+    }
+  ]
+}
