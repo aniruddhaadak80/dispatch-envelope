@@ -30,7 +30,7 @@ export default async function InstancePage({ params }: { params: Promise<{ id: s
         <h1>{fixture.id}</h1>
         <p>
           {site.slots} slots of {site.slotMinutes} minutes · ceiling {ceiling} kW
-          {tariff === null ? ' · no tariff' : ` · ${tariff.currency} time-of-use`}
+          {tariff === null ? ' · no tariff' : ` · ${tariff.currency} time-of-use, priced in cents`}
         </p>
       </section>
 
@@ -45,10 +45,15 @@ export default async function InstancePage({ params }: { params: Promise<{ id: s
             </span>
             <dl className="metrics">
               <div>
+                {/*
+                  The engine works in whole CENTS. Rendering "235 GBP" would overstate the
+                  cost a hundredfold, so the number is shown as cents and the currency is named
+                  separately in the subtitle above.
+                */}
                 <dt>cost</dt>
                 <dd>
                   {plan.total_cost_cents}
-                  <span className="unit">{plan.currency}</span>
+                  <span className="unit">c</span>
                 </dd>
               </div>
               <div>
