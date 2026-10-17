@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from typing import Any, Final
 
-from .model import DispatchInput, EnvelopeInput
 from .protocol import EngineError
 from .solver import dispatch_plan, propagate_envelope, prove_infeasible
 

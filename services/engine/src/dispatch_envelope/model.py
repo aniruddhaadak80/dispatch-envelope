@@ -8,7 +8,7 @@ supply.
 
 from __future__ import annotations
 
-from typing import Any, TypedDict
+from typing import Any, NotRequired, TypedDict
 
 from .protocol import EngineError
 
@@ -107,12 +107,19 @@ class ScheduleOutput(TypedDict):
 
     version: int
     feasible: bool
+    objective: str
+    optimal: bool
+    currency: str
     total_cost_cents: int
     peak_kw: int
     peak_slot: int
     unused_headroom_kw: int
+    search_nodes: int
     schedule: list[ScheduleEntry]
     per_slot: list[SlotUse]
+    unplaced: list[str]
+    # Refusals only: a successful plan carries no violations to report.
+    violations: NotRequired[list[str]]
 
 
 class Conflict(TypedDict):
@@ -180,7 +187,9 @@ def _as_int(value: Any, field: str, subject: str) -> int:
     is exactly the class of bug this product exists to prevent.
     """
     if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise EngineError("BAD_SHAPE", f"{subject}.{field} must be a number, got {type(value).__name__}")
+        raise EngineError(
+            "BAD_SHAPE", f"{subject}.{field} must be a number, got {type(value).__name__}"
+        )
     if isinstance(value, float) and not value.is_integer():
         raise EngineError("NON_INTEGER", f"{subject}.{field} must be a whole number, got {value!r}")
     return int(value)
@@ -197,7 +206,11 @@ def normalise_load(raw: Any, index: int) -> Load:
         raise EngineError("BAD_SHAPE", f"loads[{index}] must be an object")
 
     subject = f"loads[{index}]"
-    missing = [key for key in ("id", "power_kw", "earliest_slot", "latest_slot", "min_slots", "max_slots") if key not in raw]
+    missing = [
+        key
+        for key in ("id", "power_kw", "earliest_slot", "latest_slot", "min_slots", "max_slots")
+        if key not in raw
+    ]
     if missing:
         raise EngineError("MISSING_FIELD", f"{subject} is missing {', '.join(missing)}")
 
@@ -205,9 +218,11 @@ def normalise_load(raw: Any, index: int) -> Load:
     if not isinstance(load_id, str) or not load_id:
         raise EngineError("BAD_SHAPE", f"{subject}.id must be a non-empty string")
 
+    raw_name = raw.get("name")
+    name = raw_name if isinstance(raw_name, str) and raw_name else load_id
     result: Load = {
         "id": load_id,
-        "name": raw.get("name") if isinstance(raw.get("name"), str) and raw["name"] else load_id,
+        "name": name,
         "power_kw": _as_int(raw["power_kw"], "power_kw", subject),
         "earliest_slot": _as_int(raw["earliest_slot"], "earliest_slot", subject),
         "latest_slot": _as_int(raw["latest_slot"], "latest_slot", subject),

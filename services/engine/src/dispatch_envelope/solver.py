@@ -25,7 +25,8 @@ deliberately different functions, so a bug in one cannot hide itself in the othe
 
 from __future__ import annotations
 
-from typing import Final, Sequence
+from typing import Final
+from collections.abc import Sequence
 
 from .model import (
     Conflict,
@@ -39,6 +40,7 @@ from .model import (
     Site,
     Slot,
     SlotUse,
+    Tariff,
     ValidationProblem,
     load as parse_payload,
     validate_inputs,
@@ -57,7 +59,13 @@ SEARCH_BUDGET: Final[int] = 200_000
 
 #: Problem codes that make a load unschedulable on its own terms, independent of other loads.
 UNSCHEDULABLE_CODES: Final[frozenset[str]] = frozenset(
-    {"WINDOW_OUT_OF_HORIZON", "INVERTED_WINDOW", "BAD_DURATION", "WINDOW_TOO_SHORT", "LOAD_EXCEEDS_SITE_LIMIT"}
+    {
+        "WINDOW_OUT_OF_HORIZON",
+        "INVERTED_WINDOW",
+        "BAD_DURATION",
+        "WINDOW_TOO_SHORT",
+        "LOAD_EXCEEDS_SITE_LIMIT",
+    }
 )
 
 
@@ -93,7 +101,9 @@ def _legal_starts(item: Load, slots: int) -> range:
 def _fits_horizon(item: Load, start: int, slots: int) -> bool:
     """Is this placement inside both the load's window and the horizon?"""
     end = start + int(item["min_slots"])
-    return start >= int(item["earliest_slot"]) and start <= _last_start(item, slots) and end <= slots
+    return (
+        start >= int(item["earliest_slot"]) and start <= _last_start(item, slots) and end <= slots
+    )
 
 
 def _individually_ok(item: Load, slots: int) -> bool:
@@ -120,7 +130,6 @@ def _mandatory_floor(site: Site, loads: Sequence[Load]) -> list[int]:
     for item in loads:
         if not item["mandatory"] or int(item["power_kw"]) == 0:
             continue
-        span = max(int(item["min_slots"]), 1)
         for index in range(int(item["earliest_slot"]), slots):
             floor[index] += int(item["power_kw"])
     return floor
@@ -295,7 +304,9 @@ def propagate_envelope(payload: EnvelopeInput) -> EnvelopeOutput:
         if not changed:
             break
     else:
-        raise EngineError("NO_FIXED_POINT", f"envelope did not converge within {MAX_ITERATIONS} iterations")
+        raise EngineError(
+            "NO_FIXED_POINT", f"envelope did not converge within {MAX_ITERATIONS} iterations"
+        )
 
     result: list[Slot] = [
         {
@@ -314,9 +325,7 @@ def propagate_envelope(payload: EnvelopeInput) -> EnvelopeOutput:
     # supply, say — is an infeasibility in its own right. Reporting the envelope as feasible
     # while a mandatory load can never run would be the most misleading answer available.
     stranded_mandatory = [
-        item
-        for item in loads
-        if item["mandatory"] and str(item["id"]) in _unusable(soft)
+        item for item in loads if item["mandatory"] and str(item["id"]) in _unusable(soft)
     ]
     for item in stranded_mandatory:
         problems.append(
@@ -385,7 +394,7 @@ def _minimal_core(site: Site, loads: Sequence[Load]) -> tuple[list[Load], bool]:
     return core, proved_minimal
 
 
-def prove_infeasible(payload: ProofInput) -> dict[str, object]:
+def prove_infeasible(payload: ProveInput) -> dict[str, object]:
     """Return a minimal unsat core, or ``infeasible: false`` when the plan is fine."""
     site, loads, _tariff, _optimise = parse_payload(payload)
     hard, soft = validate_inputs(site, loads)
@@ -442,7 +451,9 @@ def prove_infeasible(payload: ProofInput) -> dict[str, object]:
     proof["minimal"] = proved_minimal
     proof["conflict"] = [_conflict_of(item) for item in core]
     proof["removable_kw"] = sum(
-        int(item["power_kw"]) for item in usable if item["id"] not in {entry["id"] for entry in core}
+        int(item["power_kw"])
+        for item in usable
+        if item["id"] not in {entry["id"] for entry in core}
     )
 
     floor = _mandatory_floor(site, core)
@@ -502,7 +513,7 @@ def _conflict_of(item: Load) -> Conflict:
 # ---------------------------------------------------------------- dispatch
 
 
-def _prices(tariff: dict[str, object] | None, slots: int) -> list[int]:
+def _prices(tariff: Tariff | None, slots: int) -> list[int]:
     if tariff is None:
         return [0] * slots
     raw = tariff.get("prices_cents")
@@ -586,7 +597,9 @@ def dispatch_plan(payload: DispatchInput) -> ScheduleOutput:
             continue
         if mode == "peak":
             # Peak-shaving: prefer the emptiest slot, breaking ties to the cheapest.
-            start = min(options, key=lambda value: (max(usage[value : value + width]), prices[value], value))
+            start = min(
+                options, key=lambda value: (max(usage[value : value + width]), prices[value], value)
+            )
         else:
             start = min(options, key=lambda value: (prices[value], value))
         placement[str(item["id"])] = list(range(start, start + width))
