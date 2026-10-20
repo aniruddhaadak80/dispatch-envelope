@@ -9,7 +9,7 @@ Branch protection keys on exact names. Renaming one silently disables the protec
 | `Format`            | `prettier --check .`                             |
 | `Lint`              | `eslint .`                                       |
 | `Typecheck`         | `tsc --noEmit` across every package              |
-| `Policy gates`      | the six `check:*` scripts                        |
+| `Policy gates`      | the seven `check:*` scripts                       |
 | `Test`              | `vitest` across every package, Node 22 and 24    |
 | `Python test`       | `pytest` + `mypy` + `ruff`, Python 3.11 and 3.12 |
 | `Build`             | turbo build + the Next.js production build       |
@@ -35,6 +35,7 @@ after a three-minute build.
 | `check:boundaries`      | a package imports another package's undeclared deep path         |
 | `check:public-hygiene`  | junk files, committed caches, oversized binaries, leftover TODOs |
 | `check:readme-commands` | the README names a command that does not exist                   |
+| `check:fixtures`       | the committed web fixtures drift from what the engine computes   |
 
 Each failure prints the file, the line, and the fix. A gate that only says "failed" wastes the
 person running it.

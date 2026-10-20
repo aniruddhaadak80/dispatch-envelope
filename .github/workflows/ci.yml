@@ -72,6 +72,13 @@ jobs:
       - run: npm run check:boundaries
       - run: npm run check:public-hygiene
       - run: npm run check:readme-commands
+      # The fixture gate compares the committed web fixtures against what the
+      # real Python engine computes right now, so it needs the engine on the
+      # path. It is the slowest gate, so it runs last: a stray hex literal
+      # should still fail in 200ms.
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e "services/engine[dev]"
+      - run: npm run check:fixtures
 
   test:
     name: Test
