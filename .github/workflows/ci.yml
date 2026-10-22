@@ -110,6 +110,11 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
+          # The engine's dependencies live in services/engine, not at the root,
+          # so the cache key is taken from that pyproject. The npm side of this
+          # job was already cached; the pip side was re-downloaded on every run.
+          cache: pip
+          cache-dependency-path: services/engine/pyproject.toml
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
