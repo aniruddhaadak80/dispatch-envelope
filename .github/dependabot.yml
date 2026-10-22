@@ -8,6 +8,15 @@ updates:
     groups:
       dev-dependencies:
         dependency-type: development
+        # Minor and patch only. The group takes everything into one PR, so a
+        # single unadaptable major makes the whole group's CI fail and strands
+        # the safe updates inside it - this week typescript 5 -> 7 lands in the
+        # group and `npm ci` alone fails to resolve against typescript-eslint 8,
+        # reddening every job in the pipeline. Majors now arrive as their own
+        # PRs, where the breakage is isolated and reviewable one at a time.
+        update-types:
+          - minor
+          - patch
   - package-ecosystem: pip
     directory: /services/engine
     schedule:
