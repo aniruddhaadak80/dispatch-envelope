@@ -9,6 +9,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- The Python test job caches pip downloads, so the engine's test dependencies are not
+  re-downloaded on every run.
 - Tests for the permission model (`rank`, `isSatisfied`, `describePermissions`), which had no
   coverage: the ceiling an empty grant implies, the escalation order, and the refusal of a
   permission the product does not know are now pinned.
