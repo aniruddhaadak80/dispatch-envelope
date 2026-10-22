@@ -11,6 +11,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - The fixture drift gate (`npm run check:fixtures`) now runs in CI, so web fixtures that no
   longer match what the engine computes fail the build instead of shipping.
+- Tests for the skill frontmatter parser and validator, which had no coverage: the error
+  paths (missing, unterminated, invalid and non-mapping frontmatter) and every rule the
+  validator enforces are now pinned.
 
 ## [0.1.0] - 2026-01-01
 
